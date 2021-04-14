@@ -8,9 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var pokemonListService = PokemonList()
+    
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        
+        NavigationView {
+            ScrollView{
+                VStack {
+                    
+                    ForEach(pokemonListService.fetchedPokemonList.results, id: \.name) {
+                        (pokemon) in
+                        NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                            Text(pokemon.name).font(.largeTitle).bold().foregroundColor(.gray)
+                        }
+                        
+                    }
+                        
+                        
+                }.frame(width: UIScreen.main.bounds.width, height: 900, alignment: .center)
+            }.onAppear{
+                self.pokemonListService.getPokemonList()
+            }.navigationBarTitle("Gotta Catch 'em All!", displayMode: .inline)
+        }
+        
+       
     }
 }
 
